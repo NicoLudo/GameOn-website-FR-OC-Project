@@ -30,6 +30,9 @@ function launchModal() {
   modalbg.style.transform = 'translateY(0)';
 }
 
+// Event listeners for closing the modal
+[closeBtn, closeThankyouBtn].forEach(btn => btn?.addEventListener('click', closeModal));
+
 // Function to close the modal
 function closeModal() {
   modalContent.classList.add('slide-out');
@@ -42,9 +45,6 @@ function closeModal() {
   });
 }
 
-// Event listeners for closing the modal
-[closeBtn, closeThankyouBtn].forEach(btn => btn?.addEventListener('click', closeModal));
-
 // // Form
 
 // Regular expression pattern for name
@@ -55,9 +55,11 @@ function validateName(name) {
   return namePattern.test(name) && name !== '-' && name.length >= 2;
 }
 
+// Regular expression pattern for email
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
 // Function to validate email address
 function validateEmail(email) {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
 }
 
@@ -89,10 +91,10 @@ function validateQuantity(quantity) {
 
 // Main function to validate form before submission
 function validate(event) {
-  // Prevent page reload on form submission
+  // Prevent page reload
   event.preventDefault();
 
-  // Clear error messages
+  // Clear previous error messages
   document.getElementById("error-first").textContent = '';
   document.getElementById("error-last").textContent = '';
   document.getElementById("error-email").textContent = '';
@@ -129,6 +131,13 @@ function validate(event) {
     }
   });
 
+  // If no errors, show success, else display the error messages
+  if (errors.length === 0) {
+    handleSuccess();
+  } else {
+    handleErrors(errors);
+  }
+
   function handleSuccess() {
     // Hide the form and display a thank you message
     form.style.display = "none";
@@ -143,12 +152,5 @@ function validate(event) {
     errors.forEach(error => {
       document.getElementById(error.element).textContent = error.message;
     });
-  }
-
-  // If no errors, show success, else display the error messages
-  if (errors.length === 0) {
-    handleSuccess();
-  } else {
-    handleErrors(errors);
   }
 }
